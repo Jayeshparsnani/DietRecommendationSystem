@@ -1,0 +1,867 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .btn-box {
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+
+    text-align: center;
+    text-decoration: none !important;
+    padding: 25px 25px;
+    margin: 0 0 30px;
+
+  }
+
+  .btn-box {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 10px
+  }
+
+  .btn:hover,
+  .btn-box:hover {
+    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.15)
+  }
+
+  .btn:focus,
+  .btn-box:focus {
+    outline: 0
+  }
+
+  .btn [class^="icon-"],
+  .btn-box [class^="icon-"],
+  .btn [class*=" icon-"],
+  .btn-box [class*=" icon-"] {
+    min-width: 16px;
+    text-align: center;
+    display: inline-block !important
+  }
+
+  .btn-box b {
+    color: #444;
+    font-size: 20px;
+    font-weight: normal;
+    margin-top: 5px;
+    text-shadow: 0 1px 0 #fff
+  }
+
+  .btn-box i {
+    font-size: 26px;
+    line-height: 36px;
+    height: 56px;
+    color: #29b7d3;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+  }
+
+  .btn-box:hover i {
+    color: rgba(0, 0, 0, 0.4);
+
+  }
+
+  a {
+    text-decoration: none;
+  }
+</style>
+
+<style>
+  .buut {
+    transition: all 0.5s 0.1s;
+  }
+
+  .buut:hover {
+    transform: scale(1.2, 1.2);
+  }
+</style>
+<script>
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
+</script>
+<div class="row ms-3">
+  <h6 class="ms-2 mt-5"></h6>
+  <hr>
+  <div class="col-9 mt-5">
+    <h6>Diet Plan</h6>
+
+  </div>
+  <div class="col-3 mt-4 me-0 mb-2">
+    <a href="{{url_for('.Diet_download')}}" class="btn btn-primary" download="report.csv">Download Diet Plan</a>
+  </div>
+
+  <hr>
+  <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="Diet-tab" data-bs-toggle="tab" href="#Diet" role="tab" aria-controls="Diet"
+        aria-selected="true">Diet</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="recipe-tab" data-bs-toggle="tab" href="#recipe" role="tab" aria-controls="recipe"
+        aria-selected="false">Recipe</a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="Diet" role="tabpanel" aria-labelledby="Diet-tab">
+
+      <div class="card mb-3 mt-5" style="width: 95%;">
+        <div class="row g-0">
+          <div class="col-md-6">
+            <img src="../static/Recommender/Images/image_1.jpeg" alt="..." height="330">
+          </div>
+          <div class="col-md-6">
+            <div class="card-body mt-5">
+              <h5 class="card-title">Get Diet Plan</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.</p>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Get
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Select Option</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{url_for('.Diet')}}" method="POST">
+              <div class="modal-body" id="go">
+                <select class="form-control" name="diet" id="diet">
+                  <option value="today">
+                    Get Today's Diet
+                  </option>
+                  <option value="week">
+                    Get Week's Diet
+                  </option>
+                </select>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="getDiet()" data-bs-dismiss="modal" class="btn btn-primary">Get
+                  Diet</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="width: 1000px;">
+        <div class="modal" id="dite_plan" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal1"
+                  onclick="document.getElementById('dite_plan').style.display='none'" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                  {{ messages[0] }}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                  <div class="carousel-inner mb-5" id="dite_plan_1">
+                  </div>
+                  <a class="carousel-control-prev mt-0 mb-5 me-5" href="#carouselExampleControls" role="button"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" style="border: 1px solid black; color: black;"
+                      aria-hidden="true"></span>
+                    <span class="sr-only" style="color: black;">Previous</span>
+                  </a>
+                  <a class="carousel-control-next mt-0 mb-5 me-5" href="#carouselExampleControls" role="button"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        function getDiet() {
+          var day = document.getElementById('diet').value;
+          const Http = new XMLHttpRequest();
+          const url = '{{url_for(".diet_algo",day=day)}}' + day;
+          Http.open("GET", url);
+          Http.send();
+
+          Http.onreadystatechange = (e) => {
+            var data = Http.responseText;
+            document.getElementById('dite_plan').style.display = 'block'
+            if (data) {
+              var json_data = JSON.parse(data)
+              if (json_data['list_diet']) {
+                var breakfast = json_data['list_diet'];
+                console.log(typeof true);
+                var html = '<form action="{{url_for(".Diet")}}" method="POST">';
+                html += '<div class="carousel-item active">';
+                html += "<div>";
+                html += "<table class='table table-bordered' border='1|1'>";
+                html += "<tr>";
+                html += "<th>" + "Breakfast" + "</th>";
+                html += "<th>" + "Lunch" + "</th>";
+                html += "<th>" + "Dinner" + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += '<td align="left" name="breakfast1" value=' + breakfast[0][0] + '>' + breakfast[0][0] + "</td>";
+                html += '<td align="left" name="lunch" value=' + breakfast[0][1] + '>' + breakfast[0][1] + "</td>";
+                html += '<td align="left" name="dinner" value=' + breakfast[0][2] + '>' + breakfast[0][2] + "</td>";
+                html += "</tr>";
+                html += "</table>";
+                html += '<div class="modal-footer">'
+
+                html += '<button type="submit" name="breakfast" value="' + breakfast[0][0] + ':' + breakfast[0][1] + ':' + breakfast[0][2] + ':' + breakfast[0][3] + ':today" class="btn btn-primary me-0 mt-5">Select</button>';
+                html += '</div>'
+                html += "</br>";
+                html += "</br>";
+                html += "</br>";
+                html += "</div>";
+                html += "</div>";
+
+                for (var i = 1; i < 10; i++) {
+                  html += '<form action="{{url_for(".Diet")}}" method="POST">';
+                  html += '<div class="carousel-item">';
+                  html += "<table class='table table-bordered' border='1|1'>";
+                  html += "<tr>";
+                  html += "<th>" + "Breakfast" + "</th>";
+                  html += "<th>" + "Lunch" + "</th>";
+                  html += "<th>" + "Dinner" + "</th>";
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += '<td align="left">' + breakfast[i][0] + "</td>";
+                  html += '<td align="left">' + breakfast[i][1] + "</td>";
+                  html += '<td align="left">' + breakfast[i][2] + "</td>";
+                  html += "</tr>";
+                  html += "</table>";
+                  html += '<div class="modal-footer">'
+                  html += '<button type="submit" name="breakfast" value="' + breakfast[i][0] + ':' + breakfast[i][1] + ':' + breakfast[i][2] + ':' + breakfast[0][3] + ':today" class="btn btn-primary me-0 mt-5">Select</button>'
+                  html += '</div>'
+                  html += "</br>";
+                  // html+='<p align="left"> <b>Calories : </b>' + cal + ' </p>';
+                  // html+='<p align="left"> <b>BMR : </b>' + bmr + ' </p>';
+                  html += "</br>";
+                  html += "</br>";
+                  html += "</div>";
+                  html += "</div>";
+
+                }
+                html += "</form>";
+                document.getElementById("dite_plan_1").innerHTML = html;
+              }
+              if (json_data['list_diet_whole']) {
+                var breakfast = json_data['list_diet_whole'];
+                var html = '<form action="{{url_for(".Diet")}}" method="POST">';
+                html += '<div class="carousel-item active">';
+
+                html += "<table class='table table-bordered' border='1|1'>";
+                html += "<tr>";
+                html += "<th>" + "*" + "</th>";
+                html += "<th>" + "Breakfast" + "</th>";
+                html += "<th>" + "Lunch" + "</th>";
+                html += "<th>" + "Dinner" + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Monday" + "</th>";
+                if (breakfast[0]["monday"]) {
+                  html += '<td align="left">' + breakfast[0]["monday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["monday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["monday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Tuesday" + "</th>";
+                if (breakfast[0]["tuesday"]) {
+                  html += '<td align="left">' + breakfast[0]["tuesday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["tuesday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["tuesday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Wednesday" + "</th>";
+                if (breakfast[0]["wednesday"]) {
+                  html += '<td align="left">' + breakfast[0]["wednesday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["wednesday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["wednesday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Thursday" + "</th>";
+                if (breakfast[0]["thursday"]) {
+                  html += '<td align="left">' + breakfast[0]["thursday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["thursday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["thursday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Friday" + "</th>";
+                if (breakfast[0]["friday"]) {
+                  html += '<td align="left">' + breakfast[0]["friday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["friday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["friday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Saturday" + "</th>";
+                if (breakfast[0]["saturday"]) {
+                  html += '<td align="left">' + breakfast[0]["saturday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["saturday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["saturday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Sunday" + "</th>";
+                if (breakfast[0]["sunday"]) {
+                  html += '<td align="left">' + breakfast[0]["sunday"]["breakfast"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["sunday"]["lunch"] + "</td>";
+                  html += '<td align="left">' + breakfast[0]["sunday"]["dinner"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+
+                html += "</table>";
+                html += '<div class="modal-footer">'
+                if (breakfast[0]["monday"]) {
+                  var monday1 = breakfast[0]["monday"]["breakfast"];
+                  var monday2 = breakfast[0]["monday"]["lunch"];
+                  var monday3 = breakfast[0]["monday"]["dinner"];
+                  var monday4 = breakfast[0]["monday"]["cal"];
+                }
+                else {
+                  var monday1 = "";
+                  var monday2 = "";
+                  var monday3 = "";
+                  var monday4 = "";
+                }
+                if (breakfast[0]["tuesday"]) {
+                  var tuesday1 = breakfast[0]["tuesday"]["breakfast"];
+                  var tuesday2 = breakfast[0]["tuesday"]["lunch"];
+                  var tuesday3 = breakfast[0]["tuesday"]["dinner"];
+                  var tuesday4 = breakfast[0]["tuesday"]["cal"];
+                }
+                else {
+                  var tuesday1 = "";
+                  var tuesday2 = "";
+                  var tuesday3 = "";
+                  var tuesday4 = "";
+                }
+                if (breakfast[0]["wednesday"]) {
+                  var wednesday1 = breakfast[0]["wednesday"]["breakfast"];
+                  var wednesday2 = breakfast[0]["wednesday"]["lunch"];
+                  var wednesday3 = breakfast[0]["wednesday"]["dinner"];
+                  var wednesday4 = breakfast[0]["wednesday"]["cal"];
+                }
+                else {
+                  var wednesday1 = "";
+                  var wednesday2 = "";
+                  var wednesday3 = "";
+                  var wednesday4 = "";
+                }
+                if (breakfast[0]["thursday"]) {
+                  var thursday1 = breakfast[0]["thursday"]["breakfast"];
+                  var thursday2 = breakfast[0]["thursday"]["lunch"];
+                  var thursday3 = breakfast[0]["thursday"]["dinner"];
+                  var thursday4 = breakfast[0]["thursday"]["cal"];
+                }
+                else {
+                  var thursday1 = "";
+                  var thursday2 = "";
+                  var thursday3 = "";
+                  var thursday4 = "";
+                }
+                if (breakfast[0]["friday"]) {
+                  var friday1 = breakfast[0]["friday"]["breakfast"];
+                  var friday2 = breakfast[0]["friday"]["lunch"];
+                  var friday3 = breakfast[0]["friday"]["dinner"];
+                  var friday4 = breakfast[0]["friday"]["cal"];
+                }
+                else {
+                  var friday1 = "";
+                  var friday2 = "";
+                  var friday3 = "";
+                  var friday4 = "";
+                }
+                if (breakfast[0]["saturday"]) {
+                  var saturday1 = breakfast[0]["saturday"]["breakfast"];
+                  var saturday2 = breakfast[0]["saturday"]["lunch"];
+                  var saturday3 = breakfast[0]["saturday"]["dinner"];
+                  var saturday4 = breakfast[0]["saturday"]["cal"];
+                }
+                else {
+                  var saturday1 = "";
+                  var saturday2 = "";
+                  var saturday3 = "";
+                  var saturday4 = "";
+                }
+                if (breakfast[0]["sunday"]) {
+                  var sunday1 = breakfast[0]["sunday"]["breakfast"];
+                  var sunday2 = breakfast[0]["sunday"]["lunch"];
+                  var sunday3 = breakfast[0]["sunday"]["dinner"];
+                  var sunday4 = breakfast[0]["sunday"]["cal"];
+                }
+                else {
+                  var sunday1 = "";
+                  var sunday2 = "";
+                  var sunday3 = "";
+                  var sunday4 = "";
+                }
+                html += '<button type="submit" name="breakfast1" value="' + monday1 + ':' + monday2 + ':' + monday3 + ':' + monday4 + ':' + tuesday1 + ':' + tuesday2 + ':' + tuesday3 + ':' + tuesday4 + ':' + wednesday1 + ':' + wednesday2 + ':' + wednesday3 + ':' + wednesday4 + ':' + thursday1 + ':' + thursday2 + ':' + thursday3 + ':' + thursday4 + ':' + friday1 + ':' + friday2 + ':' + friday3 + ':' + friday4 + ':' + saturday1 + ':' + saturday2 + ':' + saturday3 + ':' + saturday4 + ':' + sunday1 + ':' + sunday2 + ':' + sunday3 + ':' + sunday4 + ':week" class="btn btn-primary me-5 mt-5">Select</button>';
+                html += '</div>'
+                // html+='<p align="left"> <b>Calories : </b>' + breakfast[0]["friday"]["cal"] + ' </p>';
+                // html+='<p align="left"> <b>BMR : </b>' + bmr + ' </p>';
+
+
+                html += "</div>";
+                var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                for (var i = 1; i < 10; i++) {
+                  html += '<form action="{{url_for(".Diet")}}" method="POST">';
+                  html += '<div class="carousel-item">';
+                  html += "<table class='table table-bordered' border='1|1'>";
+                  html += "<tr>";
+                  html += "<th>" + "*" + "</th>";
+                  html += "<th>" + "Breakfast" + "</th>";
+                  html += "<th>" + "Lunch" + "</th>";
+                  html += "<th>" + "Dinner" + "</th>";
+                  html += "</tr>";
+                  // for (var i = 0; i < 3; i++) {
+                  html += "<tr>";
+                  html += "<th>" + "Monday" + "</th>";
+                  if (breakfast[0]["monday"]) {
+                    html += '<td align="left">' + breakfast[i]["monday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["monday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["monday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Tuesday" + "</th>";
+                  if (breakfast[0]["tuesday"]) {
+                    html += '<td align="left">' + breakfast[i]["tuesday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["tuesday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["tuesday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Wednesday" + "</th>";
+                  if (breakfast[0]["wednesday"]) {
+                    html += '<td align="left">' + breakfast[i]["wednesday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["wednesday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["wednesday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Thursday" + "</th>";
+                  if (breakfast[0]["thursday"]) {
+                    html += '<td align="left">' + breakfast[i]["thursday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["thursday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["thursday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Friday" + "</th>";
+                  if (breakfast[0]["friday"]) {
+                    html += '<td align="left">' + breakfast[i]["friday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["friday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["friday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Saturday" + "</th>";
+                  if (breakfast[0]["saturday"]) {
+                    html += '<td align="left">' + breakfast[i]["saturday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["saturday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["saturday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Sunday" + "</th>";
+                  if (breakfast[0]["sunday"]) {
+                    html += '<td align="left">' + breakfast[i]["sunday"]["breakfast"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["sunday"]["lunch"] + "</td>";
+                    html += '<td align="left">' + breakfast[i]["sunday"]["dinner"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+
+                  html += "</table>";
+                  html += '<div class="modal-footer">'
+                  if (breakfast[i]["monday"]) {
+                    var monday1 = breakfast[i]["monday"]["breakfast"];
+                    var monday2 = breakfast[i]["monday"]["lunch"];
+                    var monday3 = breakfast[i]["monday"]["dinner"];
+                    var monday4 = breakfast[i]["monday"]["cal"];
+                  }
+                  else {
+                    var monday1 = "";
+                    var monday2 = "";
+                    var monday3 = "";
+                    var monday4 = "";
+                  }
+                  if (breakfast[i]["tuesday"]) {
+                    var tuesday1 = breakfast[i]["tuesday"]["breakfast"];
+                    var tuesday2 = breakfast[i]["tuesday"]["lunch"];
+                    var tuesday3 = breakfast[i]["tuesday"]["dinner"];
+                    var tuesday4 = breakfast[i]["tuesday"]["cal"];
+                  }
+                  else {
+                    var tuesday1 = "";
+                    var tuesday2 = "";
+                    var tuesday3 = "";
+                    var tuesday4 = "";
+                  }
+                  if (breakfast[i]["wednesday"]) {
+                    var wednesday1 = breakfast[i]["wednesday"]["breakfast"];
+                    var wednesday2 = breakfast[i]["wednesday"]["lunch"];
+                    var wednesday3 = breakfast[i]["wednesday"]["dinner"];
+                    var wednesday4 = breakfast[i]["wednesday"]["cal"];
+                  }
+                  else {
+                    var wednesday1 = "";
+                    var wednesday2 = "";
+                    var wednesday3 = "";
+                    var wednesday4 = "";
+                  }
+                  if (breakfast[i]["thursday"]) {
+                    var thursday1 = breakfast[i]["thursday"]["breakfast"];
+                    var thursday2 = breakfast[i]["thursday"]["lunch"];
+                    var thursday3 = breakfast[i]["thursday"]["dinner"];
+                    var thursday4 = breakfast[i]["thursday"]["cal"];
+                  }
+                  else {
+                    var thursday1 = "";
+                    var thursday2 = "";
+                    var thursday3 = "";
+                    var thursday4 = "";
+                  }
+                  if (breakfast[i]["friday"]) {
+                    var friday1 = breakfast[i]["friday"]["breakfast"];
+                    var friday2 = breakfast[i]["friday"]["lunch"];
+                    var friday3 = breakfast[i]["friday"]["dinner"];
+                    var friday4 = breakfast[i]["friday"]["cal"];
+                  }
+                  else {
+                    var friday1 = "";
+                    var friday2 = "";
+                    var friday3 = "";
+                    var friday4 = "";
+                  }
+                  if (breakfast[i]["saturday"]) {
+                    var saturday1 = breakfast[i]["saturday"]["breakfast"];
+                    var saturday2 = breakfast[i]["saturday"]["lunch"];
+                    var saturday3 = breakfast[i]["saturday"]["dinner"];
+                    var saturday4 = breakfast[i]["saturday"]["cal"];
+                  }
+                  else {
+                    var saturday1 = "";
+                    var saturday2 = "";
+                    var saturday3 = "";
+                    var saturday4 = "";
+                  }
+                  if (breakfast[i]["sunday"]) {
+                    var sunday1 = breakfast[i]["sunday"]["breakfast"];
+                    var sunday2 = breakfast[i]["sunday"]["lunch"];
+                    var sunday3 = breakfast[i]["sunday"]["dinner"];
+                    var sunday4 = breakfast[i]["sunday"]["cal"];
+                  }
+                  else {
+                    var sunday1 = "";
+                    var sunday2 = "";
+                    var sunday3 = "";
+                    var sunday4 = "";
+                  }
+                  html += '<button type="submit" name="breakfast1" value="' + monday1 + ':' + monday2 + ':' + monday3 + ':' + monday4 + ':' + tuesday1 + ':' + tuesday2 + ':' + tuesday3 + ':' + tuesday4 + ':' + wednesday1 + ':' + wednesday2 + ':' + wednesday3 + ':' + wednesday4 + ':' + thursday1 + ':' + thursday2 + ':' + thursday3 + ':' + thursday4 + ':' + friday1 + ':' + friday2 + ':' + friday3 + ':' + friday4 + ':' + saturday1 + ':' + saturday2 + ':' + saturday3 + ':' + saturday4 + ':' + sunday1 + ':' + sunday2 + ':' + sunday3 + ':' + sunday4 + ':week" class="btn btn-primary me-5 mt-5">Select</button>'
+                  html += '</div>'
+                  html += "</div>";
+                }
+                html += "</form>";
+                document.getElementById("dite_plan_1").innerHTML = html;
+              }
+            }
+          }
+        }
+      </script>
+
+      <div class="row">
+        <div class="col-12 mt-3">
+          <h4 class="mt-3">
+            Information
+          </h4>
+        </div>
+        <hr>
+
+        <div class="col-5 mt-3 ms-5 btn-box">
+          <a href="#" class="big"><i class="fa fa-cutlery fa-xs me-2"></i><br>
+            <div style="color: black;">{{total}}</div><b>Total Diet Plan Taken</b>
+          </a>
+        </div>
+        <div class="col-5 mt-3 ms-5 btn-box">
+          <a href="#" class="big"><i class="fa fa-bicycle fa-xs me-2"></i><br>
+            <div style="color: black;">{{week}}</div><b>This Week's Diet Plan Done</b>
+          </a>
+        </div>
+      </div>
+      <div class="col-12">
+        <h4 class="mt-3">
+          Your Diet
+        </h4>
+      </div>
+      <hr>
+      <div class="col-12  mt-5">
+        {% if dictionary %}
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Breakfast</th>
+              <th scope="col">Lunch</th>
+              <th scope="col">Dinner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Monday</th>
+
+              <td class="buut">{{dictionary["monday"][0]}}</td>
+              <td class="buut">{{dictionary["monday"][1]}}</td>
+              <td class="buut">{{dictionary["monday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Tuesday</th>
+              <td class="buut">{{dictionary["tuesday"][0]}}</td>
+              <td class="buut">{{dictionary["tuesday"][1]}}</td>
+              <td class="buut">{{dictionary["tuesday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Wednesday</th>
+              <td class="buut">{{dictionary["wednesday"][0]}}</td>
+              <td class="buut">{{dictionary["wednesday"][1]}}</td>
+              <td class="buut">{{dictionary["wednesday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Thursday</th>
+              <td class="buut">{{dictionary["thursday"][0]}}</td>
+              <td class="buut">{{dictionary["thursday"][1]}}</td>
+              <td class="buut">{{dictionary["thursday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Friday</th>
+              <td class="buut">{{dictionary["friday"][0]}}</td>
+              <td class="buut">{{dictionary["friday"][1]}}</td>
+              <td class="buut">{{dictionary["friday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Saturday</th>
+              <td class="buut">{{dictionary["saturday"][0]}}</td>
+              <td class="buut">{{dictionary["saturday"][1]}}</td>
+              <td class="buut">{{dictionary["saturday"][2]}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Sunday</th>
+              <td class="buut">{{dictionary["sunday"][0]}}</td>
+              <td class="buut">{{dictionary["sunday"][1]}}</td>
+              <td class="buut">{{dictionary["sunday"][2]}}</td>
+            </tr>
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="tab-pane fade pop" id="recipe" role="tabpanel" aria-labelledby="recipe-tab">
+      <div class="col-12 mt-5">
+        <h4> Here are Some Recipe for Food Suggestions</h4>
+      </div>
+      <hr>
+      <div class="row">
+        {% if recipes %}
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" data-container="body" class="btn btn-lg  example-popover1"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/food.jpg) no-repeat; background-size: cover; color: white;"
+            data-bs-toggle="popover" title="{{recipes[0][0]}}"
+            data-bs-content="{{recipes[0][1]}}">{{recipes[0][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover2"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_1.jpeg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[1][0]}}"
+            data-bs-content="{{recipes[1][1]}}">{{recipes[1][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover3"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_3.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[2][0]}}"
+            data-bs-content="{{recipes[2][1]}}">{{recipes[2][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover4"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_3.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[3][0]}}"
+            data-bs-content="{{recipes[3][1]}}">{{recipes[3][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover5"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/food.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[4][0]}}"
+            data-bs-content="{{recipes[4][1]}}">{{recipes[4][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover6"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_1.jpeg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[5][0]}}"
+            data-bs-content="{{recipes[5][1]}}">{{recipes[5][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover7"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_1.jpeg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[6][0]}}"
+            data-bs-content="{{recipes[6][1]}}">{{recipes[6][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover8"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/image_3.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[7][0]}}"
+            data-bs-content="{{recipes[7][1]}}">{{recipes[7][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover9"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/food.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{recipes[8][0]}}"
+            data-bs-content="{{recipes[8][1]}}">{{recipes[8][0]}}
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<script>
+  var popover1 = new bootstrap.Popover(document.querySelector('.example-popover'.concat('1')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('2')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('3')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('4')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('5')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('6')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('7')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('8')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('9')), {
+    container: 'body'
+  });
+
+
+  $(function () {
+    $('.example-popover').popover({ container: '.pop' })
+  })
+
+</script>
+{% endblock %}

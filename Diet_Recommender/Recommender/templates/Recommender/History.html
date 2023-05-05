@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row ms-3">
+  <h6 class="ms-2 mt-5"></h6>
+  <hr>
+  <div class="col-12 mt-5">
+    <h6>History</h6>
+  </div>
+
+  <hr>
+  <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      {% if active== "all" %}
+      <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab"
+        aria-controls="profile" aria-selected="true">Profile History</a>
+      {% else %}
+      <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+        aria-selected="true">Profile History</a>
+      {% endif %}
+    </li>
+    <li class="nav-item" role="presentation">
+      {% if active== "diet" %}
+      <a class="nav-link active" id="Diet-tab" data-bs-toggle="tab" href="#Diet" role="tab" aria-controls="Diet"
+        aria-selected="false">Diet History</a>
+      {% else %}
+      <a class="nav-link" id="Diet-tab" data-bs-toggle="tab" href="#Diet" role="tab" aria-controls="Diet"
+        aria-selected="false">Diet History</a>
+      {% endif %}
+    </li>
+    <li class="nav-item" role="presentation">
+      {% if active== "exercise" %}
+      <a class="nav-link active" id="exercise-tab" data-bs-toggle="tab" href="#exercise" role="tab"
+        aria-controls="exercise" aria-selected="false">Exercise History</a>
+      {% else %}
+      <a class="nav-link" id="exercise-tab" data-bs-toggle="tab" href="#exercise" role="tab" aria-controls="exercise"
+        aria-selected="false">Exercise History</a>
+      {% endif %}
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    {% if active== "all" %}
+    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      {% else %}
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        {% endif %}
+        <div class="row">
+          <div class="col-9 mt-5 ms-5">
+            <h6> Previous Information</h6>
+          </div>
+
+          <div class="col-2 mt-4 me-0 mb-2">
+            <form action="{{url_for('.delete_info')}}">
+              <button class="btn btn-Danger" type="submit">Delete History</button>
+            </form>
+          </div>
+          <hr>
+        </div>
+
+        <div class="col-11 mt-5">
+          <table class="table table-bordered">
+            <thead>
+              <tr style="height: 50px;">
+
+                <th scope="col">Date</th>
+                <th scope="col">Height</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Activity</th>
+                <th scope="col">Diabetic</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in info %}
+              <tr>
+
+                <td class="buut">{{ i.date_table.strftime('%d-%m-%Y') }}</td>
+                <td class="buut">{{i.height}}</td>
+                <td class="buut">{{i.weight}}</td>
+                <td class="buut">{{i.activity}}</td>
+                <td class="buut">Type {{i.Diabetic}}</td>
+
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% if active== "diet" %}
+      <div class="tab-pane fade  show active" id="Diet" role="tabpanel" aria-labelledby="Diet-tab">
+        {% else %}
+        <div class="tab-pane fade" id="Diet" role="tabpanel" aria-labelledby="Diet-tab">
+          {% endif %}
+          <div class="row">
+            <div class="col-3 mt-5 ms-3"></div>
+            <div class="col-4 mt-5 text-center">
+              <form action="{{url_for('.History')}}" method="POST">
+                <label for="Diet">Diet Date:</label>
+                <input type="date" id="Diet" name="diet">
+                <br>
+                <button type="submit" class="btn btn-primary  mt-5">Find</button>
+              </form>
+            </div>
+
+            <div class="col-4 mt-2 ms-5"></div>
+            <div class="col-12 mt-5"> Diet </div>
+            <hr>
+            <div class="col-11 mt-5">
+              <table class="table table-bordered">
+                <thead>
+                  <tr style="height: 50px;">
+
+                    <th scope="col">Breakfast</th>
+                    <th scope="col"> Lunch</th>
+                    <th scope="col">Dinner</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+
+                    <td class="buut">{{breakfast}}</td>
+                    <td class="buut">{{lunch}}</td>
+                    <td class="buut">{{dinner}}</td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+        </div>
+        {% if active== "exercise" %}
+        <div class="tab-pane fade show active" id="exercise" role="tabpanel" aria-labelledby="exercise-tab">
+          {% else %}
+          <div class="tab-pane fade" id="exercise" role="tabpanel" aria-labelledby="exercise-tab">
+            {% endif %}
+            <div class="row">
+              <div class="col-3 mt-5 ms-3"></div>
+              <div class="col-4 mt-5 text-center">
+                <form action="{{url_for('.History')}}" method="POST">
+                  <label for="Diet">Exercise Date:</label>
+                  <input type="date" id="Exercise" name="exercise">
+                  <br>
+                  <button type="submit" class="btn btn-primary  mt-5">Find</button>
+                </form>
+              </div>
+
+              <div class="col-4 mt-5 ms-5"></div>
+              <div class="col-12 mt-5"> Exercise </div>
+              <hr>
+              <div class="col-11 mt-5">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr style="height: 50px;">
+
+                      <th scope="col">Exercise</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+
+                      <td class="buut">{{exercise}}</td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endblock%}

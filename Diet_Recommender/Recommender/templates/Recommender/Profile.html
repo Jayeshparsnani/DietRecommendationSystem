@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <h6 class="ms-2 mt-5"></h6>
+    <hr>
+    <div class="col-9 mt-5 ms-5">
+        <h6>Profile</h6>
+    </div>
+
+    <div class="col-2 mt-4 me-0 mb-2">
+        <form action="{{url_for('.delete_acc')}}">
+            <button class="btn btn-Danger" type="submit">Delete Account</button>
+        </form>
+    </div>
+
+    <hr>
+    <!-- Column -->
+    <div class="col-lg-4 col-xlg-3 col-md-5 ms-5">
+        <div class="card">
+            <div class="card-body">
+                <center class="m-t-30"> <img src="../../../static/images/{{img_filename}}"
+                        onerror="this.src='../../../static/Recommender/Images/default.jpg';" class="rounded-circle"
+                        width="150" height="150" />
+                    <h4 class="card-title m-t-10"> </h4>
+                    <h6 class="card-subtitle">User</h6>
+                </center>
+            </div>
+            <div>
+                <hr>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">Name : {{user.name}}</small><br>
+                <small class="text-muted">Email : {{user.email}}</small>
+
+            </div>
+
+
+        </div>
+        <div class="card mt-3">
+
+            <div class="card-body">
+
+                <div class="map-box">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d470029.1604841957!2d72.29955005258641!3d23.019996818380896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C+Gujarat!5e0!3m2!1sen!2sin!4v1493204785508"
+                        width="100%" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-7 col-xlg-9 col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <form class="form-horizontal form-material" method='post' action="{{url_for('.profile')}}"
+                    enctype=multipart/form-data>
+                    <fieldset>
+
+                        <!-- Form Name -->
+                        <legend>Personal Information Details</legend>
+                        <hr>
+                        <!-- Text input-->
+                        <div class="row">
+                            <div class="col-sm-8 ms-5">
+                                Name:<input type="text" name="firstName" placeholder="{{user.name}}"
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-4 ms-5 mt-3">
+                                Age:<input type="number" min="20" max="70" placeholder="{{age}}" name="age"
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-4 ms-5 mt-3">
+                                Phone No.:<input type="tel" placeholder="{{phone}}" name="phone" class="form-control">
+                            </div>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Gender:<select type="gender" placeholder="{{gender}}" name='gender'
+                                    class="form-control">
+                                    <option value="male" {% if gender=='male' %} selected {% endif %}>Male</option>
+                                    <option value="female" {% if gender=='female' %} selected {% endif %}>Female
+                                    </option>
+
+                                </select>
+                            </div>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Profile Image:
+                                <input class=" mt-2 " type="file" name="image">
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <legend>Physical Information</legend>
+                            <hr>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Height (in Meters):<input type="number" step="0.01" placeholder="{{height}}"
+                                    name="height" class="form-control">
+                            </div>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Weight (in Kgs):<input type="number" placeholder="{{weight}}" name="weight"
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Activity:<select type="gender" name='activity' class="form-control">
+                                    <option value="low" {% if activity=='low' %} selected {% endif %}>Low</option>
+                                    <option value="medium" {% if activity=='medium' %} selected {% endif %}>Medium
+                                    </option>
+                                    <option value="high" {% if activity=='high' %} selected {% endif %}>High</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 mt-3 ms-5">
+                                Diabetic Type:<select type="gender" placeholder="" name='type' class="form-control">
+                                    <option value="1" {% if diabetic=='1' %} selected {% endif %}>Type 1</option>
+                                    <option value="2" {% if diabetic=='2' %} selected {% endif %}>Type 2</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Text input-->
+
+                        <!-- Command -->
+                        <br>
+                        <br>
+                        <div class="row">
+                            <hr>
+                            <div class="col-sm-12 col-sm-offset-1">
+
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-default">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+<!-- Row -->
+<!-- ============================================================== -->
+<!-- End PAge Content -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Right sidebar -->
+<!-- ============================================================== -->
+<!-- .right-sidebar -->
+<!-- ============================================================== -->
+<!-- End Right sidebar -->
+<!-- ============================================================== -->
+</div>
+{% endblock %}

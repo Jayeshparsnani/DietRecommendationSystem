@@ -1,0 +1,191 @@
+<html>
+
+<head>
+    <title>
+        Diet Recommender
+    </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .diet:hover i {
+            color: skyblue;
+
+        }
+
+        .buut:hover {
+            transform: scale(1.1, 1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand ms-3" href="{{url_for('.Index')}}">Diet Recommender</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                </ul>
+                <form class="d-flex me-3 mt-2" action="{{url_for('Authentication.signup')}}">
+                    <button class="btn btn-outline-primary" type="submit">Signup</button>
+                </form>
+                <form class="d-flex me-2 mt-2" action="{{url_for('Authentication.login')}}">
+                    <button class="btn btn-outline-success" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+
+    </nav>
+
+    <div class="row">
+
+        <div class="col-12 text-center"
+            style="background-image:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('../../../static/Information/Images/image_3.jpg'); height: 600px; background-size: cover; background-repeat: no-repeat; background-blend-mode: darken; ">
+            <form action="{{url_for('Authentication.signup')}}">
+                <button class="btn btn-primary" type="submit" style="height: 60px; width: 150px; margin-top: 17%;">
+                    Signup</button>
+            </form>
+            <p style="color: whitesmoke; font-size: xx-large;">Signup Today for personalized Plan.</p>
+        </div>
+        <div class="col-12">
+            <h3 class="ms-5 mt-5">Don't Know what to eat when you are diabetic? Don't Worry.</h3>
+        </div>
+        <div class="col-6 mt-3" style="background-color: whitesmoke;">
+            <h5 class="ms-5 mt-3">Diabetes types</h5>
+            <p class="ms-5">Diabetes mellitus, commonly known as diabetes, is a metabolic disease that causes high blood
+                sugar. The hormone insulin moves sugar from the blood into your cells to be stored or used for energy.
+                With diabetes, your body either doesn't make enough insulin or can't effectively use the insulin it does
+                make.
+
+                Untreated high blood sugar from diabetes can damage your nerves, eyes, kidneys, and other organs.
+
+                There are a few different types of diabetes:
+            <ul class="ms-5">
+
+                <li>Type 1 diabetes </li>
+                <li>Type 2 diabetes </li>
+                <li>Prediabetes</li>
+                <li>Gestational diabetes </li>
+            </ul>
+            </p>
+        </div>
+        <div class="col-6 mt-3 text-center"
+            style="background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('../../../static/Information/Images/food.jpg');  background-size: cover; background-blend-mode: darken; background-repeat: no-repeat;">
+            <form action="{{url_for('Authentication.signup')}}">
+                <button class="btn btn-primary" type="submit" style="height: 60px; width: 150px; margin-top: 17%;">
+                    Signup</button>
+            </form>
+            <p style="color: whitesmoke; font-size: xx-large;">Signup Today for personalized Diet Plan.</p>
+        </div>
+
+        <div class="col-12">
+            <h3 class="ms-5 mt-5">Don't Know how to remain fit with perfect diet? Don't worry.</h3>
+        </div>
+        <div class="col-6 mt-3 text-center"
+            style="background-image:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('../../../static/Information/Images/exe.jpg');  background-size: cover; background-blend-mode: darken; opacity: 0.9; background-repeat: no-repeat;">
+            <form action="{{url_for('Authentication.signup')}}">
+                <button class="btn btn-primary" type="submit" style="height: 60px; width: 150px; margin-top: 17%;">
+                    Signup</button>
+            </form>
+            <p style="color: white; font-size: xx-large;">Signup Today for personalized Exercise Plan.</p>
+        </div>
+        <div class="col-6 mt-3" style="background-color: whitesmoke;">
+            <h5 class="mt-3">Exercise</h5>
+            <p>
+                Most people tend to focus on one type of exercise or activity and think they're doing enough. Research
+                has shown that it's important to get all four types of exercise: endurance, strength, balance, and
+                flexibility. Each one has different benefits. Doing one kind also can improve your ability to do the
+                others, and variety helps reduce boredom and risk of injury. Types of Training are:
+
+            <ul>
+                <li>
+                    <p>Endurance</p>
+                <li>
+                    <p>Strength</p>
+                </li>
+                <li>
+                    <p>Balance</p>
+                </li>
+                <li>
+                    <p>Flexibility</p>
+                </li>
+            </ul>
+            </p>
+        </div>
+        <div class="col-12 mt-5 ms-5">
+            <h3>Services Provided</h3>
+        </div>
+        <div class="col-12" style="background-color: whitesmoke;">
+            <div class="row text-center">
+                <div class="diet col-3 ms-5 pt-5 pb-5">
+                    <i class="fa fa-cutlery me-2 ms-5" style="font-size: 100px;"></i><br><br>
+                    <h6 class="ms-5"> Diet Plan</h6>
+                </div>
+                <div class=" diet col-3 pt-5 ms-5">
+                    <i class="fa fa-bicycle me-2 ms-5" style="font-size: 100px;"></i><br><br>
+                    <h6 class="ms-5">Exercise Plan</h6>
+                </div>
+                <div class="diet col-3 pt-5 ms-5">
+                    <i class="fa fa-user me-2 ms-5" style="font-size: 100px;"></i><br><br>
+                    <h6 class="ms-5">Improvement Tracking</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mt-5 ms-5">
+            <h3>Get Your Plan Today</h3>
+        </div>
+        <form action="{{url_for('Authentication.signup')}}">
+            <button class="col-5 mt-3 ms-5 text-center buut"
+                style="transition: all 0.5s 0.1s; background-image:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('../../../static/Information/Images/food.jpg');  background-size: cover; background-blend-mode: darken; opacity: 0.9; background-repeat: no-repeat; height: 400px;">
+                <p style="color: white; font-size: large; margin-top: 10%;">Get Personalized Diet Plan.</p>
+            </button>
+            <button class="col-5 mt-6 ms-5 text-center buut"
+                style="transition: all 0.5s 0.1s; background-image:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('../../../static/Information/Images/exe.jpg');  background-size: cover; background-blend-mode: darken; opacity: 0.9; background-repeat: no-repeat; height: 400px;">
+
+                <p style="color: white; font-size: large; margin-top: 10%;">Get Personalized Exercise Plan.</p>
+            </button>
+        </form>
+        <div class="col-12 mt-5 ms-5">
+            <h3>To Know More Contact Us.</h3>
+        </div>
+        <div class="col-12" style="background-color: whitesmoke;">
+            <div class="row text-center">
+                <div class="col-4 mt-5 mb-5">
+                    Name: Jayesh Parsnani <br>
+                    <i class="fa fa-envelope me-2 ms-5"></i> Email: 2017.jayesh.parsnani@ves.ac.in <br>
+                    <i class="fa fa-phone me-2 ms-5"></i> Phone: 9988776655
+                </div>
+                <div class="col-4 mt-5 mb-5">
+                    Name: Vandana Chachlani <br>
+                    <i class="fa fa-envelope me-2 ms-5"></i> Email: 2017.vandana.Chachlani@ves.ac.in <br>
+                    <i class="fa fa-phone me-2 ms-5"></i> Phone: 9988776655
+                </div>
+                <div class="col-4 mt-5 ">
+                    Name: Jai Mulani <br>
+                    <i class="fa fa-envelope me-2 ms-5"></i> Email: 2017.jai.mulani@ves.ac.in <br>
+                    <i class="fa fa-phone me-2 ms-5"></i> Phone: 9988776655
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="modal-footer bg-light align-content-center mt-3">
+            <h6 class="me-5">&copy;Diet Recommender 2021</h6>
+        </div>
+    </footer>
+</body>
+
+</html>

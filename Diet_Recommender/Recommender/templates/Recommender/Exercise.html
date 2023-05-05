@@ -1,0 +1,686 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .btn-box {
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+
+    text-align: center;
+    text-decoration: none !important;
+    padding: 25px 25px;
+    margin: 0 0 30px;
+
+  }
+
+  .btn-box {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 10px
+  }
+
+  .btn:hover,
+  .btn-box:hover {
+    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.15)
+  }
+
+  .btn:focus,
+  .btn-box:focus {
+    outline: 0
+  }
+
+  .btn [class^="icon-"],
+  .btn-box [class^="icon-"],
+  .btn [class*=" icon-"],
+  .btn-box [class*=" icon-"] {
+    min-width: 16px;
+    text-align: center;
+    display: inline-block !important
+  }
+
+  .btn-box b {
+    color: #444;
+    font-size: 20px;
+    font-weight: normal;
+    margin-top: 5px;
+    text-shadow: 0 1px 0 #fff
+  }
+
+  .btn-box i {
+    font-size: 26px;
+    line-height: 36px;
+    height: 56px;
+    color: #29b7d3;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+  }
+
+  .btn-box:hover i {
+    color: rgba(0, 0, 0, 0.4);
+
+  }
+
+  a {
+    text-decoration: none;
+  }
+</style>
+
+<style>
+  .buut {
+    transition: all 0.5s 0.1s;
+  }
+
+  .buut:hover {
+    transform: scale(1.1, 1.1);
+  }
+</style>
+<div class="row ms-3">
+  <h6 class="ms-2 mt-5"></h6>
+  <hr>
+  <div class="col-9 mt-5">
+    <h6>Exercise Plan</h6>
+  </div>
+  <div class="col-3 mt-4 me-0 mb-2">
+    <a href="{{url_for('.Exercise_download')}}" class="btn btn-primary" download="report.csv">Download Exercise Plan</a>
+  </div>
+
+  <hr>
+  <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="Diet-tab" data-bs-toggle="tab" href="#Diet" role="tab" aria-controls="Diet"
+        aria-selected="true">Exercise Plan</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="recipe-tab" data-bs-toggle="tab" href="#recipe" role="tab" aria-controls="recipe"
+        aria-selected="false">Exercises</a>
+    </li>
+
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="Diet" role="tabpanel" aria-labelledby="Diet-tab">
+
+      <div class="card mb-3 mt-5" style="width: 95%;">
+        <div class="row g-0">
+          <div class="col-md-6">
+            <img src="../static/Recommender/Images/exe.jpg" alt="..." height="330">
+          </div>
+          <div class="col-md-6">
+            <div class="card-body mt-5">
+              <h5 class="card-title">Get Exercise Plan</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.</p>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Get
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Select Option</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{url_for('.Diet')}}" method="POST">
+              <div class="modal-body">
+                <select class="form-control" name="exercise" id="exercise">
+                  <option value="today">
+                    Get Today's Exercise
+                  </option>
+                  <option value="week">
+                    Get Week's Exercise
+                  </option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="getExercise()" data-bs-dismiss="modal" class="btn btn-primary">Get Exercise</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="width: 1000px;">
+        <div class="modal" id="exercise_plan" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal1"
+                  onclick="document.getElementById('exercise_plan').style.display='none'" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                  {{ messages[0] }}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                  <div class="carousel-inner mb-5" id="exercise_plan_1">
+                  </div>
+                  <a class="carousel-control-prev mt-0 mb-5 me-5" href="#carouselExampleControls" role="button"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" style="border: 1px solid black; color: black;"
+                      aria-hidden="true"></span>
+                    <span class="sr-only" style="color: black;">Previous</span>
+                  </a>
+                  <a class="carousel-control-next mt-0 mb-5 me-5" href="#carouselExampleControls" role="button"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        function getExercise() {
+          var day = document.getElementById('exercise').value;
+          const Http = new XMLHttpRequest();
+          const url = '{{url_for(".exercise_algo",day=day)}}' + day;
+          Http.open("GET", url);
+          Http.send();
+
+          Http.onreadystatechange = (e) => {
+            var data = Http.responseText;
+            document.getElementById('exercise_plan').style.display = 'block'
+            if (data) {
+              var json_data = JSON.parse(data)
+              if (json_data['list_exercise']) {
+                var exercise = json_data['list_exercise'];
+                console.log(typeof true);
+                var html = '<form action="{{url_for(".Exercise")}}" method="POST">';
+                html += '<div class="carousel-item active">';
+                html += "<div>";
+                html += "<table class='table table-bordered' border='1|1'>";
+                html += "<tr>";
+                html += "<th>" + "Exercise" + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += '<td align="left">' + exercise[0] + "</td>";
+                html += "</tr>";
+                html += "</table>";
+                html += '<div class="modal-footer">'
+                html += '<button type="submit" name="exercise" value="' + exercise[0] + ':today" class="btn btn-primary me-0 mt-5">Select</button>';
+                html += '</div>'
+                html += "</br>";
+                html += "</br>";
+                html += "</br>";
+                html += "</div>";
+                html += "</div>";
+
+                for (var i = 1; i < 10; i++) {
+                  html += '<form action="{{url_for(".Exercise")}}" method="POST">';
+                  html += '<div class="carousel-item">';
+                  html += "<table class='table table-bordered' border='1|1'>";
+                  html += "<tr>";
+                  html += "<th>" + "Exercise" + "</th>";
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += '<td align="left">' + exercise[i] + "</td>";
+                  html += "</tr>";
+                  html += "</table>";
+                  html += '<div class="modal-footer">'
+                  html += '<button type="submit" name="exercise" value="' + exercise[i] + ':today" class="btn btn-primary me-0 mt-5">Select</button>'
+                  html += '</div>'
+                  html += "</br>";
+                  html += "</br>";
+                  html += "</br>";
+                  html += "</div>";
+                  html += "</div>";
+                }
+                html += "</form>";
+                document.getElementById("exercise_plan_1").innerHTML = html;
+              }
+              if (json_data['list_exercise_whole']) {
+                var exercise = json_data['list_exercise_whole'];
+                var html = '<form action="{{url_for(".Exercise")}}" method="POST">';
+                html += '<div class="carousel-item active">';
+                html += "<table class='table table-bordered' border='1|1'>";
+                html += "<tr>";
+                html += "<th>" + "*" + "</th>";
+                html += "<th>" + "Exercise" + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Monday" + "</th>";
+                if (exercise[0]["monday"]) {
+                  html += '<td align="left">' + exercise[0]["monday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Tuesday" + "</th>";
+                if (exercise[0]["tuesday"]) {
+                  html += '<td align="left">' + exercise[0]["tuesday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Wednesday" + "</th>";
+                if (exercise[0]["wednesday"]) {
+                  html += '<td align="left">' + exercise[0]["wednesday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Thursday" + "</th>";
+                if (exercise[0]["thursday"]) {
+                  html += '<td align="left">' + exercise[0]["thursday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Friday" + "</th>";
+                if (exercise[0]["friday"]) {
+                  html += '<td align="left">' + exercise[0]["friday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Saturday" + "</th>";
+                if (exercise[0]["saturday"]) {
+                  html += '<td align="left">' + exercise[0]["saturday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th>" + "Sunday" + "</th>";
+                if (exercise[0]["sunday"]) {
+                  html += '<td align="left">' + exercise[0]["sunday"] + "</td>";
+                }
+                else {
+                  html += '<td align="left"></td>';
+                }
+                html += "</tr>";
+                html += "</table>";
+                html += '<div class="modal-footer">'
+                if (exercise[0]["monday"]) {
+                  var monday1 = exercise[0]["monday"];
+                }
+                else {
+                  var monday1 = "";
+                }
+                if (exercise[0]["tuesday"]) {
+                  var tuesday1 = exercise[0]["tuesday"];
+                }
+                else {
+                  var tuesday1 = "";
+                }
+                if (exercise[0]["wednesday"]) {
+                  var wednesday1 = exercise[0]["wednesday"];
+                }
+                else {
+                  var wednesday1 = "";
+                }
+                if (exercise[0]["thursday"]) {
+                  var thursday1 = exercise[0]["thursday"];
+                }
+                else {
+                  var thursday1 = "";
+                }
+                if (exercise[0]["friday"]) {
+                  var friday1 = exercise[0]["friday"];
+                }
+                else {
+                  var friday1 = "";
+                }
+                if (exercise[0]["saturday"]) {
+                  var saturday1 = exercise[0]["saturday"];
+                }
+                else {
+                  var saturday1 = "";
+                }
+                if (exercise[0]["sunday"]) {
+                  var sunday1 = exercise[0]["sunday"];
+                }
+                else {
+                  var sunday1 = "";
+                }
+                html += '<button type="submit" name="exercise1" value="' + monday1 + ':' + tuesday1 + ':' + wednesday1 + ':' + thursday1 + ':' + friday1 + ':' + saturday1 + ':' + sunday1 + ':week" class="btn btn-primary me-5 mt-5">Select</button>';
+                html += '</div>';
+                html += "</div>";
+                var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                for (var i = 1; i < 10; i++) {
+                  html += '<form action="{{url_for(".Exercise")}}" method="POST">';
+                  html += '<div class="carousel-item">';
+                  html += "<table class='table table-bordered' border='1|1'>";
+                  html += "<tr>";
+                  html += "<th>" + "*" + "</th>";
+                  html += "<th>" + "Exercise" + "</th>";
+                  html += "</tr>";
+                  // for (var i = 0; i < 3; i++) {
+                  html += "<tr>";
+                  html += "<th>" + "Monday" + "</th>";
+                  if (exercise[0]["monday"]) {
+                    html += '<td align="left">' + exercise[i]["monday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Tuesday" + "</th>";
+                  if (exercise[0]["tuesday"]) {
+                    html += '<td align="left">' + exercise[i]["tuesday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Wednesday" + "</th>";
+                  if (exercise[0]["wednesday"]) {
+                    html += '<td align="left">' + exercise[i]["wednesday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Thursday" + "</th>";
+                  if (exercise[0]["thursday"]) {
+                    html += '<td align="left">' + exercise[i]["thursday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Friday" + "</th>";
+                  if (exercise[0]["friday"]) {
+                    html += '<td align="left">' + exercise[i]["friday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Saturday" + "</th>";
+                  if (exercise[0]["saturday"]) {
+                    html += '<td align="left">' + exercise[i]["saturday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+                  html += "<tr>";
+                  html += "<th>" + "Sunday" + "</th>";
+                  if (exercise[0]["sunday"]) {
+                    html += '<td align="left">' + exercise[i]["sunday"] + "</td>";
+                  }
+                  else {
+                    html += '<td align="left"></td>';
+                  }
+                  html += "</tr>";
+
+                  html += "</table>";
+                  html += '<div class="modal-footer">'
+                  if (exercise[i]["monday"]) {
+                    var monday1 = exercise[i]["monday"];
+                  }
+                  else {
+                    var monday1 = "";
+                  }
+                  if (exercise[i]["tuesday"]) {
+                    var tuesday1 = exercise[i]["tuesday"];
+                  }
+                  else {
+                    var tuesday1 = "";
+                  }
+                  if (exercise[i]["wednesday"]) {
+                    var wednesday1 = exercise[i]["wednesday"];
+                  }
+                  else {
+                    var wednesday1 = "";
+                  }
+                  if (exercise[i]["thursday"]) {
+                    var thursday1 = exercise[i]["thursday"];
+                  }
+                  else {
+                    var thursday1 = "";
+                  }
+                  if (exercise[i]["friday"]) {
+                    var friday1 = exercise[i]["friday"];
+                  }
+                  else {
+                    var friday1 = "";
+                  }
+                  if (exercise[i]["saturday"]) {
+                    var saturday1 = exercise[i]["saturday"];
+                  }
+                  else {
+                    var saturday1 = "";
+                  }
+                  if (exercise[i]["sunday"]) {
+                    var sunday1 = exercise[i]["sunday"];
+                  }
+                  else {
+                    var sunday1 = "";
+                  }
+
+                  html += '<button type="submit" name="exercise1" value="' + monday1 + ':' + tuesday1 + ':' + wednesday1 + ':' + thursday1 + ':' + friday1 + ':' + saturday1 + ':' + sunday1 + ':week" class="btn btn-primary me-5 mt-5">Select</button>';
+                  html += '</div>';
+                  html += "</div>";
+                }
+                html += "</form>";
+                document.getElementById("exercise_plan_1").innerHTML = html;
+              }
+            }
+          }
+        }
+      </script>
+      <div class="row">
+        <div class="col-12 mt-3">
+          <h4 class="mt-3">
+            Information
+          </h4>
+        </div>
+        <hr>
+        <div class="col-5 mt-3 ms-5 btn-box">
+          <a href="#" class="big"><i class="fa fa-cutlery fa-xs me-2"></i><br>
+            <div style="color: black;">{{total}}</div><b>Total Exercise Plan Taken</b>
+          </a>
+        </div>
+        <div class="col-5 mt-3 ms-5 btn-box">
+          <a href="#" class="big"><i class="fa fa-bicycle fa-xs me-2"></i><br>
+            <div style="color: black;">{{week}}</div><b>This Week's Exercise PLan Done</b>
+          </a>
+        </div>
+      </div>
+      <div class="col-12">
+        <h4 class="mt-3">
+          Your Exercise
+        </h4>
+      </div>
+      <hr>
+      <div class="col-12  mt-5">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Exercise</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Monday</th>
+              <td class="buut">{{dictionary["monday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Tuesday</th>
+              <td class="buut">{{dictionary["tuesday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Wednesday</th>
+              <td class="buut">{{dictionary["wednesday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Thursday</th>
+              <td class="buut">{{dictionary["thursday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Friday</th>
+              <td class="buut">{{dictionary["friday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Saturday</th>
+              <td class="buut">{{dictionary["saturday"]}}</td>
+
+            </tr>
+            <tr>
+              <th scope="row">Sunday</th>
+              <td class="buut">{{dictionary["sunday"]}}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="recipe" role="tabpanel" aria-labelledby="recipe-tab">
+      <div class="col-12 mt-5">
+        <h4> Here are Some Recipe for Food Suggestions</h4>
+      </div>
+      <hr>
+      <div class="row">
+        {% if exercise %}
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" data-container="body" class="btn btn-lg  example-popover1"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;"
+            data-bs-toggle="popover" title="{{exercise[0][0]}}"
+            data-bs-content="{{exercise[0][1]}}">
+            {{exercise[0][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover2"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[1][0]}}" data-bs-content="{{exercise[1][1]}}">
+            {{exercise[1][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover3"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[2][0]}}" data-bs-content="{{exercise[2][1]}}">
+            {{exercise[2][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover4"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[3][0]}}" data-bs-content="{{exercise[3][1]}}">
+            {{exercise[3][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover5"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[4][0]}}" data-bs-content="{{exercise[4][1]}}">
+            {{exercise[4][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover6"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[5][0]}}" data-bs-content="{{exercise[5][1]}}">
+            {{exercise[5][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover7"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[6][0]}}" data-bs-content="{{exercise[6][1]}}">
+            {{exercise[6][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover8"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[7][0]}}" data-bs-content="{{exercise[7][1]}}">
+            {{exercise[7][0]}}
+          </button>
+        </div>
+        <div class="col-4 mt-5">
+          <button tabindex="0" type="button" class="btn btn-lg btn-Secondary example-popover9"
+            style="height: 200px; min-width: 300px; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(../../../static/Information/Images/exe.jpg) no-repeat; background-size: cover; color: white;" data-bs-toggle="
+            popover" title="{{exercise[8][0]}}" data-bs-content="{{exercise[8][1]}}">
+            {{exercise[8][0]}}
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<script>
+  var popover1 = new bootstrap.Popover(document.querySelector('.example-popover'.concat('1')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('2')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('3')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('4')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('5')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('6')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('7')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('8')), {
+    container: 'body'
+  });
+  var popover = new bootstrap.Popover(document.querySelector('.example-popover'.concat('9')), {
+    container: 'body'
+  });
+
+
+  $(function () {
+    $('.example-popover').popover({ container: '.pop' })
+  })
+
+</script>
+{% endblock %}
